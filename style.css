@@ -1,3 +1,102 @@
-.a-enter-ar-button, .a-enter-vr-button {
-    right: 70px !important;
+:root {
+	--bg: #0f1724;
+	--card: #0b1220;
+	--accent: #06b6d4;
+	--muted: #94a3b8;
+	--text: #e6eef6;
+}
+* {
+	box-sizing: border-box;
+}
+html,
+body {
+	height: 100%;
+}
+body {
+	margin: 0;
+	font-family:
+		Inter,
+		system-ui,
+		-apple-system,
+		"Segoe UI",
+		Roboto,
+		"Helvetica Neue",
+		Arial;
+	color: var(--text);
+	background: linear-gradient(180deg, #071029 0%, var(--bg) 100%);
+}
+.container {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 24px;
+}
+.site-header {
+	padding: 28px 0;
+	text-align: center;
+}
+.site-header h1 {
+	margin: 0;
+	font-size: 28px;
+}
+.tag {
+	color: var(--muted);
+	margin-top: 6px;
+}
+.hero {
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+	padding: 28px;
+	border-radius: 12px;
+	margin: 18px 0;
+}
+.hero h2 {
+	margin: 0 0 8px 0;
+}
+.controls {
+	margin-top: 12px;
+}
+button {
+	background: var(--accent);
+	border: 0;
+	color: #042027;
+	padding: 10px 14px;
+	border-radius: 8px;
+	cursor: pointer;
+	margin-right: 8px;
+	font-weight: 600;
+}
+button:active {
+	transform: translateY(1px);
+}
+.features {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 12px;
+	margin: 18px 0;
+}
+.features article {
+	background: var(--card);
+	padding: 16px;
+	border-radius: 10px;
+}
+.code-sample pre {
+	background: #021022;
+	padding: 12px;
+	border-radius: 8px;
+	overflow: auto;
+	color: var(--muted);
+}
+.site-footer {
+	padding: 18px;
+	text-align: center;
+	color: var(--muted);
+	margin-top: 18px;
+}
+
+@media (max-width: 520px) {
+	.container {
+		padding: 16px;
+	}
+	.site-header h1 {
+		font-size: 22px;
+	}
 }

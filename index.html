@@ -1,48 +1,61 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Hosting Demo — Static Site</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="container">
+				<h1>Hosting Demo</h1>
+				<p class="tag">
+					A minimal static website to demonstrate GitHub hosting
+				</p>
+			</div>
+		</header>
 
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          
-          
-          
-          <link href="style.css" rel="stylesheet" />
-          
-          <script src="https://app.bsd.education/resources/js/aframe-v1.2.0.min.js"></script>
-          
-        </head>
-        <body>
-          
+		<main class="container">
+			<section class="hero">
+				<h2>Deploy to GitHub Pages</h2>
+				<p>
+					Serve this repository as a static site using GitHub Pages in seconds.
+				</p>
+				<div class="controls">
+					<button id="previewBtn">Open Live Preview</button>
+					<button id="instructionsBtn">Show Publish Steps</button>
+				</div>
+			</section>
 
-    <a-scene renderer="colorManagement: true;" background="color: lightsteelblue" fog="color: lightsteelblue; far: 10">
+			<section class="features">
+				<article>
+					<h3>Simple</h3>
+					<p>No build step required — plain HTML/CSS/JS.</p>
+				</article>
+				<article>
+					<h3>Portable</h3>
+					<p>Works with GitHub Pages or any static host.</p>
+				</article>
+				<article>
+					<h3>Demo</h3>
+					<p>Use the buttons above to preview and see publish steps.</p>
+				</article>
+			</section>
 
-        <!-- preload lighthouse model -->
-        <a-assets>
-            <a-asset-item id="island" src="/resources/projects/a-frame-virtual-tour/scene.gltf"></a-asset-item>
-        </a-assets>
+			<section class="code-sample">
+				<h3>Index snippet</h3>
+				<pre><code>&lt;!doctype html&gt;
+&lt;html&gt;...&lt;/html&gt;</code></pre>
+			</section>
+		</main>
 
-        <!-- display lighthouse model -->
-        <a-gltf-model src="#island" scale="0.01 0.01 0.01" position="0 0 -5" rotation="0 50 0"></a-gltf-model>
+		<footer class="site-footer">
+			<div class="container">
+				See the instructions in the project README to publish.
+			</div>
+		</footer>
 
-        <!-- waypoints -->
-        <a-sphere onclick="gotoPoint()" radius="0.2" position="-2 2 -4" color="gold"></a-sphere>
-        <a-sphere onclick="gotoPoint()" radius="0.2" position="4.8 1 -5.4" color="gold"></a-sphere>
-        <a-sphere onclick="gotoPoint()" radius="0.2" position="1 4.3 -3" color="gold"></a-sphere>
-        <a-sphere onclick="gotoPoint()" radius="0.2" position="-2 4.8 -9.2" color="gold"></a-sphere>
-        <a-sphere onclick="gotoPoint()" radius="0.2" position="0 1.6 0" color="gold"></a-sphere>
-
-        <!-- camera and cursor grouped as an entity -->
-        <a-entity id="camera-grp" position="0 1.6 0">
-            <a-camera position="0 0 0" wasd-controls-enabled="false">
-                <a-cursor fuse="true" fuse-timeout="500"></a-cursor>
-            </a-camera>
-        </a-entity>
-    </a-scene>
-
-    
-
-          
-          <script src="script.js"></script>
-          
-        </body>
-      </html>
-    
+		<script src="script.js"></script>
+	</body>
+</html>
