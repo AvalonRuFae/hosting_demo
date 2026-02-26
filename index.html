@@ -1,0 +1,48 @@
+
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          
+          
+          
+          <link href="style.css" rel="stylesheet" />
+          
+          <script src="https://app.bsd.education/resources/js/aframe-v1.2.0.min.js"></script>
+          
+        </head>
+        <body>
+          
+
+    <a-scene renderer="colorManagement: true;" background="color: lightsteelblue" fog="color: lightsteelblue; far: 10">
+
+        <!-- preload lighthouse model -->
+        <a-assets>
+            <a-asset-item id="island" src="/resources/projects/a-frame-virtual-tour/scene.gltf"></a-asset-item>
+        </a-assets>
+
+        <!-- display lighthouse model -->
+        <a-gltf-model src="#island" scale="0.01 0.01 0.01" position="0 0 -5" rotation="0 50 0"></a-gltf-model>
+
+        <!-- waypoints -->
+        <a-sphere onclick="gotoPoint()" radius="0.2" position="-2 2 -4" color="gold"></a-sphere>
+        <a-sphere onclick="gotoPoint()" radius="0.2" position="4.8 1 -5.4" color="gold"></a-sphere>
+        <a-sphere onclick="gotoPoint()" radius="0.2" position="1 4.3 -3" color="gold"></a-sphere>
+        <a-sphere onclick="gotoPoint()" radius="0.2" position="-2 4.8 -9.2" color="gold"></a-sphere>
+        <a-sphere onclick="gotoPoint()" radius="0.2" position="0 1.6 0" color="gold"></a-sphere>
+
+        <!-- camera and cursor grouped as an entity -->
+        <a-entity id="camera-grp" position="0 1.6 0">
+            <a-camera position="0 0 0" wasd-controls-enabled="false">
+                <a-cursor fuse="true" fuse-timeout="500"></a-cursor>
+            </a-camera>
+        </a-entity>
+    </a-scene>
+
+    
+
+          
+          <script src="script.js"></script>
+          
+        </body>
+      </html>
+    
