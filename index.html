@@ -1,26 +1,492 @@
 <!doctype html>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="style.css" />
+		<meta charset="utf-8" />
+		<title>Virtual Museum Tour</title>
+		<meta name="description" content="Interactive A-Frame Museum" />
+		<script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+		<link rel="stylesheet" href="style.css" />
+		<script src="script.js" defer></script>
 	</head>
-
 	<body>
-		<div id="game-container">
-			<div id="ui-layer">
-				<div id="score">SCORE: 0</div>
-				<div id="health-bar-container">
-					<div id="health-bar-fill"></div>
-				</div>
-			</div>
-			<canvas id="gameCanvas"></canvas>
-			<div id="crt-overlay"></div>
-			<div id="game-over" class="hidden">
-				<h1>GAME OVER</h1>
-				<p>Final Score: <span id="final-score">0</span></p>
-				<button id="restart-btn">RESTART</button>
-			</div>
-		</div>
+		<a-scene
+			background="color: #1a1a2e"
+			fog="type: linear; color: #1a1a2e; near: 1; far: 35"
+		>
+			<!-- Camera and Controls -->
+			<a-entity
+				camera
+				position="0 1.6 0"
+				look-controls
+				wasd-controls
+			></a-entity>
 
-		<script type="text/javascript" src="script.js"></script>
+			<!-- ENTRANCE HALL -->
+
+			<!-- Entrance Floor -->
+			<a-plane
+				position="0 -1 0"
+				rotation="-90 0 0"
+				width="20"
+				height="20"
+				color="#2a4d6d"
+				material="side: double"
+			></a-plane>
+
+			<!-- Back Wall -->
+			<a-plane
+				position="0 3 -10"
+				width="20"
+				height="8"
+				color="#1a2332"
+			></a-plane>
+
+			<!-- Left Wall -->
+			<a-plane
+				position="-10 3 0"
+				rotation="0 90 0"
+				width="20"
+				height="8"
+				color="#1a3a48"
+			></a-plane>
+
+			<!-- Right Wall -->
+			<a-plane
+				position="10 3 0"
+				rotation="0 90 0"
+				width="20"
+				height="8"
+				color="#1a3a48"
+			></a-plane>
+
+			<!-- Welcome Sign -->
+			<a-entity
+				text="value: WELCOME TO THE MUSEUM; align: center; color: #ffffff; width: 10; fontSize: 100"
+				position="0 2.5 -9.9"
+			></a-entity>
+
+			<!-- Lighting -->
+			<a-light
+				type="directional"
+				color="white"
+				intensity="0.8"
+				position="5 10 5"
+			></a-light>
+			<a-light type="ambient" color="white" intensity="0.4"></a-light>
+
+			<!-- Waypoint Button to Art Gallery -->
+			<a-entity
+				position="5 1.6 -5"
+				id="gallery-button"
+				geometry="primitive: box; width: 1.5; height: 0.8; depth: 0.2"
+				material="color: #4fc3f7; emissive: #4fc3f7; emissiveIntensity: 0.5"
+				cursor="fuse: true; fuseTimeout: 2000"
+				event-set__enter="_event: mouseenter; scale: 1.2 1.2 1.2"
+				event-set__leave="_event: mouseleave; scale: 1 1 1"
+			>
+				<a-text
+					value="Art Gallery"
+					align="center"
+					anchor="center"
+					color="white"
+					position="0 0 0.15"
+				></a-text>
+			</a-entity>
+
+			<!-- Waypoint Button to Sculpture Court -->
+			<a-entity
+				position="-5 1.6 -5"
+				id="sculpture-button"
+				geometry="primitive: box; width: 1.5; height: 0.8; depth: 0.2"
+				material="color: #ef5350; emissive: #ef5350; emissiveIntensity: 0.5"
+				cursor="fuse: true; fuseTimeout: 2000"
+				event-set__enter="_event: mouseenter; scale: 1.2 1.2 1.2"
+				event-set__leave="_event: mouseleave; scale: 1 1 1"
+			>
+				<a-text
+					value="Sculpture"
+					align="center"
+					anchor="center"
+					color="white"
+					position="0 0 0.15"
+				></a-text>
+			</a-entity>
+
+			<!-- Waypoint Button to Planetarium -->
+			<a-entity
+				position="0 1.6 5"
+				id="planetarium-button"
+				geometry="primitive: box; width: 1.5; height: 0.8; depth: 0.2"
+				material="color: #66bb6a; emissive: #66bb6a; emissiveIntensity: 0.5"
+				cursor="fuse: true; fuseTimeout: 2000"
+				event-set__enter="_event: mouseenter; scale: 1.2 1.2 1.2"
+				event-set__leave="_event: mouseleave; scale: 1 1 1"
+			>
+				<a-text
+					value="Planetarium"
+					align="center"
+					anchor="center"
+					color="white"
+					position="0 0 0.15"
+				></a-text>
+			</a-entity>
+
+			<!-- ART GALLERY ROOM (at position x: 30) -->
+
+			<!-- Gallery Floor -->
+			<a-plane
+				position="30 -1 0"
+				rotation="-90 0 0"
+				width="20"
+				height="20"
+				color="#3d5a50"
+			></a-plane>
+
+			<!-- Gallery Back Wall -->
+			<a-plane
+				position="30 3 -10"
+				width="20"
+				height="8"
+				color="#2a3a35"
+			></a-plane>
+
+			<!-- Gallery Left Wall -->
+			<a-plane
+				position="20 3 0"
+				rotation="0 90 0"
+				width="20"
+				height="8"
+				color="#234035"
+			></a-plane>
+
+			<!-- Gallery Right Wall -->
+			<a-plane
+				position="40 3 0"
+				rotation="0 90 0"
+				width="20"
+				height="8"
+				color="#234035"
+			></a-plane>
+
+			<!-- Artwork 1 - Abstract -->
+			<a-box
+				position="28 2 -9.5"
+				width="3"
+				height="3"
+				depth="0.2"
+				material="color: #ff6b6b"
+			>
+				<a-animation
+					attribute="rotation"
+					dur="4000"
+					from="0 0 0"
+					to="0 360 0"
+					repeat="indefinite"
+				></a-animation>
+			</a-box>
+			<a-entity
+				text="value: Abstract Expression; color: white; align: center; fontSize: 60"
+				position="28 0.5 -9.4"
+			></a-entity>
+
+			<!-- Artwork 2 - Digital -->
+			<a-box
+				position="32 2 -9.5"
+				width="3"
+				height="3"
+				depth="0.2"
+				material="color: #4ecdc4"
+			>
+				<a-animation
+					attribute="rotation"
+					dur="5000"
+					from="0 0 0"
+					to="0 360 0"
+					repeat="indefinite"
+				></a-animation>
+			</a-box>
+			<a-entity
+				text="value: Digital Dreams; color: white; align: center; fontSize: 60"
+				position="32 0.5 -9.4"
+			></a-entity>
+
+			<!-- Artwork 3 - Modern -->
+			<a-cylinder
+				position="30 2 2"
+				radius="1.5"
+				height="3"
+				material="color: #ffd54f"
+			>
+				<a-animation
+					attribute="rotation"
+					dur="3000"
+					from="0 0 0"
+					to="0 360 0"
+					repeat="indefinite"
+				></a-animation>
+			</a-cylinder>
+			<a-entity
+				text="value: Modern Forms; color: white; align: center; fontSize: 60"
+				position="30 0.5 2"
+			></a-entity>
+
+			<!-- Gallery Return Button -->
+			<a-entity
+				position="30 1.6 8"
+				id="gallery-return"
+				geometry="primitive: box; width: 1.5; height: 0.8; depth: 0.2"
+				material="color: #9c27b0; emissive: #9c27b0; emissiveIntensity: 0.5"
+				cursor="fuse: true; fuseTimeout: 2000"
+				event-set__enter="_event: mouseenter; scale: 1.2 1.2 1.2"
+				event-set__leave="_event: mouseleave; scale: 1 1 1"
+			>
+				<a-text
+					value="Exit"
+					align="center"
+					anchor="center"
+					color="white"
+					position="0 0 0.15"
+				></a-text>
+			</a-entity>
+
+			<!-- SCULPTURE COURT (at position x: -30) -->
+
+			<!-- Court Floor -->
+			<a-plane
+				position="-30 -1 0"
+				rotation="-90 0 0"
+				width="20"
+				height="20"
+				color="#4a3728"
+			></a-plane>
+
+			<!-- Court Back Wall -->
+			<a-plane
+				position="-30 3 -10"
+				width="20"
+				height="8"
+				color="#2a231a"
+			></a-plane>
+
+			<!-- Court Left Wall -->
+			<a-plane
+				position="-40 3 0"
+				rotation="0 90 0"
+				width="20"
+				height="8"
+				color="#3a2a23"
+			></a-plane>
+
+			<!-- Court Right Wall -->
+			<a-plane
+				position="-20 3 0"
+				rotation="0 90 0"
+				width="20"
+				height="8"
+				color="#3a2a23"
+			></a-plane>
+
+			<!-- Sculpture 1 - Cone -->
+			<a-cone
+				position="-28 1 0"
+				radius-bottom="1.5"
+				radius-top="0.5"
+				height="3"
+				material="color: #ff9800"
+			>
+				<a-animation
+					attribute="rotation"
+					dur="6000"
+					from="0 0 0"
+					to="0 360 0"
+					repeat="indefinite"
+				></a-animation>
+			</a-cone>
+			<a-entity
+				text="value: Geometric Form; color: white; align: center; fontSize: 60"
+				position="-28 0.2 0"
+			></a-entity>
+
+			<!-- Sculpture 2 - Sphere -->
+			<a-sphere position="-32 1.5 0" radius="1.5" material="color: #2196f3">
+				<a-animation
+					attribute="position"
+					dur="3000"
+					from="-32 1.5 0"
+					to="-32 2.2 0"
+					repeat="indefinite"
+					direction="alternate"
+				></a-animation>
+			</a-sphere>
+			<a-entity
+				text="value: Harmony; color: white; align: center; fontSize: 60"
+				position="-32 0.2 0"
+			></a-entity>
+
+			<!-- Sculpture 3 - Cylinder -->
+			<a-cylinder
+				position="-30 1 -3"
+				radius="1"
+				height="3"
+				material="color: #9c27b0"
+			>
+				<a-animation
+					attribute="rotation"
+					dur="4000"
+					from="0 0 0"
+					to="0 360 0"
+					repeat="indefinite"
+				></a-animation>
+			</a-cylinder>
+			<a-entity
+				text="value: Ascension; color: white; align: center; fontSize: 60"
+				position="-30 0.2 -3"
+			></a-entity>
+
+			<!-- Court Return Button -->
+			<a-entity
+				position="-30 1.6 8"
+				id="sculpture-return"
+				geometry="primitive: box; width: 1.5; height: 0.8; depth: 0.2"
+				material="color: #9c27b0; emissive: #9c27b0; emissiveIntensity: 0.5"
+				cursor="fuse: true; fuseTimeout: 2000"
+				event-set__enter="_event: mouseenter; scale: 1.2 1.2 1.2"
+				event-set__leave="_event: mouseleave; scale: 1 1 1"
+			>
+				<a-text
+					value="Exit"
+					align="center"
+					anchor="center"
+					color="white"
+					position="0 0 0.15"
+				></a-text>
+			</a-entity>
+
+			<!-- PLANETARIUM ROOM (at position z: -30) -->
+
+			<!-- Planetarium Floor -->
+			<a-plane
+				position="0 -1 -30"
+				rotation="-90 0 0"
+				width="20"
+				height="20"
+				color="#1a0a2e"
+			></a-plane>
+
+			<!-- Planetarium Back Wall -->
+			<a-plane
+				position="0 3 -40"
+				width="20"
+				height="8"
+				color="#0f061a"
+			></a-plane>
+
+			<!-- Planetarium Left Wall -->
+			<a-plane
+				position="-10 3 -30"
+				rotation="0 90 0"
+				width="20"
+				height="8"
+				color="#160b2e"
+			></a-plane>
+
+			<!-- Planetarium Right Wall -->
+			<a-plane
+				position="10 3 -30"
+				rotation="0 90 0"
+				width="20"
+				height="8"
+				color="#160b2e"
+			></a-plane>
+
+			<!-- Stars (decorative spheres) -->
+			<a-sphere
+				position="-5 4 -32"
+				radius="0.2"
+				material="color: #FFD700; emissive: #FFD700; emissiveIntensity: 0.8"
+			></a-sphere>
+			<a-sphere
+				position="5 5 -32"
+				radius="0.15"
+				material="color: #FFF8DC; emissive: #FFF8DC; emissiveIntensity: 0.8"
+			></a-sphere>
+			<a-sphere
+				position="0 6 -32"
+				radius="0.18"
+				material="color: #FFFACD; emissive: #FFFACD; emissiveIntensity: 0.8"
+			></a-sphere>
+			<a-sphere
+				position="-3 4.5 -35"
+				radius="0.15"
+				material="color: #FFE4B5; emissive: #FFE4B5; emissiveIntensity: 0.8"
+			></a-sphere>
+			<a-sphere
+				position="4 4 -35"
+				radius="0.2"
+				material="color: #FFD700; emissive: #FFD700; emissiveIntensity: 0.8"
+			></a-sphere>
+
+			<!-- Central Planetary System -->
+			<!-- Sun -->
+			<a-sphere
+				position="0 2 -30"
+				radius="0.8"
+				material="color: #FF6B00; emissive: #FFD700; emissiveIntensity: 1"
+			>
+				<a-animation
+					attribute="rotation"
+					dur="8000"
+					from="0 0 0"
+					to="0 360 0"
+					repeat="indefinite"
+				></a-animation>
+			</a-sphere>
+
+			<!-- Orbiting Planet -->
+			<a-entity position="0 2 -30">
+				<a-sphere position="3 0 0" radius="0.4" material="color: #4169E1">
+					<a-animation
+						attribute="rotation"
+						dur="8000"
+						from="0 0 0"
+						to="0 360 0"
+						repeat="indefinite"
+					></a-animation>
+				</a-sphere>
+			</a-entity>
+
+			<!-- Planetarium Title -->
+			<a-entity
+				text="value: Cosmic Wonders; color: #FFD700; align: center; fontSize: 80"
+				position="0 3.5 -31"
+			></a-entity>
+
+			<!-- Planetarium Return Button -->
+			<a-entity
+				position="0 1.6 -22"
+				id="planetarium-return"
+				geometry="primitive: box; width: 1.5; height: 0.8; depth: 0.2"
+				material="color: #9c27b0; emissive: #9c27b0; emissiveIntensity: 0.5"
+				cursor="fuse: true; fuseTimeout: 2000"
+				event-set__enter="_event: mouseenter; scale: 1.2 1.2 1.2"
+				event-set__leave="_event: mouseleave; scale: 1 1 1"
+			>
+				<a-text
+					value="Exit"
+					align="center"
+					anchor="center"
+					color="white"
+					position="0 0 0.15"
+				></a-text>
+			</a-entity>
+		</a-scene>
+
+		<!-- Audio Elements (for sound effects) -->
+		<audio id="teleport-sound" preload="auto">
+			<source
+				src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAA=="
+				type="audio/wav"
+			/>
+		</audio>
 	</body>
 </html>

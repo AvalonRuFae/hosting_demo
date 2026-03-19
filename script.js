@@ -1,208 +1,116 @@
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-const scoreElement = document.getElementById("score");
-const healthBarFill = document.getElementById("health-bar-fill");
-const gameOverScreen = document.getElementById("game-over");
-const finalScoreElement = document.getElementById("final-score");
-const restartBtn = document.getElementById("restart-btn");
+// Wait for scene to be loaded
+document.addEventListener("DOMContentLoaded", () => {
+	const sceneEl = document.querySelector("a-scene");
 
-// Set canvas dimensions
-canvas.width = 800;
-canvas.height = 600;
+	// Wait for scene to load
+	sceneEl.addEventListener("loaded", () => {
+		initializeMuseum();
+	});
 
-// Game State Variables
-let player;
-let projectiles = [];
-let enemies = [];
-let particles = [];
-let healingItems = [];
-let keys = {};
-let isGameOver = false;
-let score = 0;
-let spawnInterval = 1500;
-let lastSpawnTime = 0;
-let lastHealingSpawnTime = 0;
-let animationId;
-let upgradeMessage_timer = 0;
-let lastHealthPercent = 100;
-let lastHealthBarColor = "#00ff00";
-const MAX_ENEMIES = 60; // Cap to prevent too many on screen
-
-// Input Management
-window.addEventListener("keydown", (e) => (keys[e.code] = true));
-window.addEventListener("keyup", (e) => (keys[e.code] = false));
-
-window.addEventListener("mousedown", (e) => {
-	if (isGameOver) return;
-	const rect = canvas.getBoundingClientRect();
-	const mouseX = e.clientX - rect.left;
-	const mouseY = e.clientY - rect.top;
-
-	const angle = Math.atan2(mouseY - player.y, mouseX - player.x);
-
-	if (player.gunLevel === 1) {
-		projectiles.push(new Projectile(player.x, player.y, angle));
-	} else {
-		// Gun Level 2+: Triple Shot
-		projectiles.push(new Projectile(player.x, player.y, angle));
-		projectiles.push(new Projectile(player.x, player.y, angle - 0.2));
-		projectiles.push(new Projectile(player.x, player.y, angle + 0.2));
+	// Fallback: also try immediately
+	if (sceneEl.hasLoaded) {
+		initializeMuseum();
 	}
 });
 
-restartBtn.addEventListener("click", () => {
-	init();
-});
+function initializeMuseum() {
+	// Get references to the camera and buttons
+	const camera = document.querySelector("a-entity[camera]");
+	const galleryButton = document.getElementById("gallery-button");
+	const sculptureButton = document.getElementById("sculpture-button");
+	const planetariumButton = document.getElementById("planetarium-button");
+	const galleryReturn = document.getElementById("gallery-return");
+	const sculptureReturn = document.getElementById("sculpture-return");
+	const planetariumReturn = document.getElementById("planetarium-return");
 
-class Player {
-	constructor() {
-		this.x = canvas.width / 2;
-		this.y = canvas.height / 2;
-		this.size = 24;
-		this.speed = 5;
-		this.color = "#00ff00";
-		this.maxHealth = 100;
-		this.health = 100;
-		this.invincibleFrames = 0;
-		this.gunLevel = 1;
+	// Room configurations (position for each room)
+	const rooms = {
+		entrance: { position: "0 1.6 0" },
+		gallery: { position: "30 1.6 0" },
+		sculpture: { position: "-30 1.6 0" },
+		planetarium: { position: "0 1.6 -30" },
+	};
+
+	// Current room tracking
+	let currentRoom = "entrance";
+
+	// Function to teleport camera to a room
+	function teleportTo(roomKey) {
+		const room = rooms[roomKey];
+		camera.setAttribute("position", room.position);
+		currentRoom = roomKey;
+		playTeleportSound();
+
+		console.log(`Teleported to ${roomKey}`);
 	}
-	update() {
-		if (keys["KeyW"] || keys["ArrowUp"]) this.y -= this.speed;
-		if (keys["KeyS"] || keys["ArrowDown"]) this.y += this.speed;
-		if (keys["KeyA"] || keys["ArrowLeft"]) this.x -= this.speed;
-		if (keys["KeyD"] || keys["ArrowRight"]) this.x += this.speed;
 
-		this.x = Math.max(
-			this.size / 2,
-			Math.min(canvas.width - this.size / 2, this.x),
-		);
-		this.y = Math.max(
-			this.size / 2,
-			Math.min(canvas.height - this.size / 2, this.y),
-		);
-
-		// Handle invincibility cooldown
-		if (this.invincibleFrames > 0) {
-			this.invincibleFrames--;
+	// Play teleport sound effect
+	function playTeleportSound() {
+		const sound = document.getElementById("teleport-sound");
+		if (sound) {
+			sound.currentTime = 0;
+			sound.play().catch((e) => console.log("Sound playback info:", e));
 		}
 	}
-	takeDamage(amount) {
-		if (this.invincibleFrames > 0) return false;
 
-		this.health = Math.max(0, this.health - amount);
-		this.invincibleFrames = 60; // 1 second of invincibility at 60fps
-
-		return this.health <= 0;
+	// Add click listeners to buttons
+	if (galleryButton) {
+		galleryButton.addEventListener("click", () => {
+			teleportTo("gallery");
+		});
 	}
-	draw() {
-		// Visual feedback for invincibility (flickering between white and green)
-		if (this.invincibleFrames > 0) {
-			if (Math.floor(this.invincibleFrames / 5) % 2 === 0) {
-				ctx.fillStyle = "#ffffff"; // White flash
-			} else {
-				ctx.fillStyle = this.color;
-			}
-		} else {
-			ctx.fillStyle = this.color;
+
+	if (sculptureButton) {
+		sculptureButton.addEventListener("click", () => {
+			teleportTo("sculpture");
+		});
+	}
+
+	if (planetariumButton) {
+		planetariumButton.addEventListener("click", () => {
+			teleportTo("planetarium");
+		});
+	}
+
+	if (galleryReturn) {
+		galleryReturn.addEventListener("click", () => {
+			teleportTo("entrance");
+		});
+	}
+
+	if (sculptureReturn) {
+		sculptureReturn.addEventListener("click", () => {
+			teleportTo("entrance");
+		});
+	}
+
+	if (planetariumReturn) {
+		planetariumReturn.addEventListener("click", () => {
+			teleportTo("entrance");
+		});
+	}
+
+	// Optional: Add keyboard navigation
+	document.addEventListener("keydown", (event) => {
+		switch (event.key) {
+			case "1":
+				teleportTo("entrance");
+				break;
+			case "2":
+				teleportTo("gallery");
+				break;
+			case "3":
+				teleportTo("sculpture");
+				break;
+			case "4":
+				teleportTo("planetarium");
+				break;
 		}
+	});
 
-		ctx.fillRect(
-			this.x - this.size / 2,
-			this.y - this.size / 2,
-			this.size,
-			this.size,
-		);
-	}
-}
-
-class Projectile {
-	constructor(x, y, angle) {
-		this.x = x;
-		this.y = y;
-		this.radius = 4;
-		this.speed = 10;
-		this.color = "#ffff00";
-		this.vx = Math.cos(angle) * this.speed;
-		this.vy = Math.sin(angle) * this.speed;
-	}
-	update() {
-		this.x += this.vx;
-		this.y += this.vy;
-	}
-	draw() {
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-		ctx.fillStyle = this.color;
-		ctx.fill();
-	}
-}
-
-class Enemy {
-	constructor(x, y, health = 1) {
-		this.x = x;
-		this.y = y;
-		this.health = health;
-		this.maxHealth = health;
-		this.flashFrames = 0;
-
-		// Tougher mobs are larger
-		this.size = 30 + (this.maxHealth - 1) * 10;
-
-		// Speed logic: health 1 mobs are scouts and move much faster
-		if (this.maxHealth === 1) {
-			this.speed = 2.5 + Math.random() * 1.0;
-		} else {
-			// Tougher mobs are slower to compensate for their high health
-			this.speed =
-				(1.2 + Math.random() * 0.8) / (1 + (this.maxHealth - 1) * 0.15);
-		}
-
-		// Color indicator for toughness
-		if (this.maxHealth <= 1)
-			this.color = "#ff3333"; // Standard red
-		else if (this.maxHealth === 2)
-			this.color = "#ff8833"; // Tougher orange
-		else this.color = "#ff00ff"; // Elite purple
-	}
-
-	update(playerX, playerY) {
-		const angle = Math.atan2(playerY - this.y, playerX - this.x);
-		this.x += Math.cos(angle) * this.speed;
-		this.y += Math.sin(angle) * this.speed;
-	}
-
-	draw() {
-		if (this.flashFrames > 0) {
-			ctx.fillStyle = "#ffffff";
-			this.flashFrames--;
-		} else {
-			ctx.fillStyle = this.color;
-		}
-
-		ctx.fillRect(
-			this.x - this.size / 2,
-			this.y - this.size / 2,
-			this.size,
-			this.size,
-		);
-
-		// Retro eye details that scale with mob size
-		ctx.fillStyle = "#fff";
-		const eyeSize = Math.max(4, this.size * 0.15);
-		const eyeOffset = this.size * 0.2;
-		ctx.fillRect(
-			this.x - eyeOffset - eyeSize / 2,
-			this.y - eyeOffset,
-			eyeSize,
-			eyeSize,
-		);
-		ctx.fillRect(
-			this.x + eyeOffset - eyeSize / 2,
-			this.y - eyeOffset,
-			eyeSize,
-			eyeSize,
-		);
-	}
+	console.log(
+		"Museum initialized! Press 1-4 to navigate between rooms, or look at the buttons and click.",
+	);
 }
 
 class HealingItem {
