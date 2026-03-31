@@ -1,49 +1,94 @@
+<!doctype html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
 
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          
-          
-          
-          <link href="style.css" rel="stylesheet" />
-          
-          <script src="https://app.bsd.education/resources/js/aframe-v1.2.0.min.js"></script>
-          
-        </head>
-        <body>
-          
+	<body>
+		<div class="game-container">
+			<canvas id="gameCanvas" width="800" height="600"></canvas>
+			<div id="side-panel" class="hidden">
+				<button id="next-wave-btn">Next Wave</button>
+				<div class="speed-controls">
+					<button class="speed-btn selected" data-speed="1">x1</button>
+					<button class="speed-btn" data-speed="2">x2</button>
+					<button class="speed-btn" data-speed="4">x4</button>
+					<button class="speed-btn" data-speed="8">x8</button>
+				</div>
+				<div class="stats">
+					<h2>Stats</h2>
+					<p>Health: <span id="health">20</span></p>
+					<p>Money: $<span id="money">100</span></p>
+					<p>Wave: <span id="wave">0</span></p>
+					<p>Units: <span id="unit-count">0</span>/20</p>
+				</div>
+				<div class="shop">
+					<h2>Shop</h2>
+					<div id="shop-slots">
+						<!-- Dynamic slots injected by script -->
+					</div>
+					<button id="reroll-btn">Reroll ($10)</button>
+				</div>
+				<div id="unit-info" class="hidden">
+					<h2>Unit Info</h2>
+					<p>Name: <span id="info-name">-</span></p>
+					<p>Rarity: <span id="info-rarity">-</span></p>
+					<p>Category: <span id="info-category">-</span></p>
+					<p>Cost: $<span id="info-cost">-</span></p>
+					<p>Damage: <span id="info-damage">-</span></p>
+					<p>DPS: <span id="info-dps">-</span></p>
+					<p>Range: <span id="info-range">-</span></p>
+					<p>Cooldown: <span id="info-cooldown">-</span></p>
+					<p>Abilities: <span id="info-abilities">-</span></p>
+					<p id="info-description">-</p>
+					<button id="sell-tower-btn" class="hidden">Sell</button>
+				</div>
+				<div id="tower-index" class="hidden">
+					<div id="index-content"></div>
+					<div class="index-footer">
+						<button id="index-prev-btn">Prev</button>
+						<span id="index-page-info">Page 1 / 1</span>
+						<button id="index-next-btn">Next</button>
+					</div>
+				</div>
+				<div class="controls">
+					<button id="toggle-index-btn">Unit Index Guide</button>
+				</div>
+			</div>
 
-    <a-scene renderer="colorManagement: true;" background="color: lightsteelblue" fog="color: lightsteelblue; far: 10">
+			<div id="start-screen" class="overlay">
+				<div class="message">
+					<h1>Tower Defense</h1>
+					<p>Select Difficulty</p>
+					<div class="difficulty-options">
+						<button class="diff-btn" data-difficulty="easy">
+							Easy (20 Waves)
+						</button>
+						<button class="diff-btn" data-difficulty="kinda-easy">
+							Kinda Easy (30 Waves)
+						</button>
+						<button class="diff-btn" data-difficulty="maybe-hard">
+							Maybe Hard (35 Waves)
+						</button>
+						<button class="diff-btn" data-difficulty="hard">
+							Hard (40 Waves)
+						</button>
+						<button class="diff-btn" data-difficulty="deadly">
+							Deadly (60 Waves)
+						</button>
+					</div>
+				</div>
+			</div>
 
-        <!-- preload lighthouse model -->
-        <a-assets>
-            <a-asset-item id="island" src="/resources/projects/a-frame-virtual-tour/scene.gltf"></a-asset-item>
-        </a-assets>
+			<div id="game-over" class="overlay hidden">
+				<div class="message">
+					<h1>GAME OVER</h1>
+					<p>You survived <span id="final-wave">0</span> waves!</p>
+					<button onclick="location.reload()">Try Again</button>
+				</div>
+			</div>
+		</div>
 
-        <!-- display lighthouse model -->
-        <a-gltf-model src="#island" scale="0.01 0.01 0.01" position="0 0 -5" rotation="0 50 0"></a-gltf-model>
-
-        <!-- waypoints -->
-        <!-- BUG #1: One waypoint is missing a closing tag - can you find it? -->
-        <a-sphere onclick="gotoPoint()" radius="0.2" position="-2 2 -4" color="gold"></a-sphere>
-        <a-sphere onclick="gotoPoint()" radius="0.2" position="4.8 1 -5.4" color="gold"></a-sphere>
-        <a-sphere onclick="gotoPoint()" radius="0.2" position="1 4.3 -3" color="gold">
-        <a-sphere onclick="gotoPoint()" radius="0.2" position="-2 4.8 -9.2" color="gold"></a-sphere>
-        <a-sphere onclick="gotoPoint()" radius="0.2" position="0 1.6 0" color="red"></a-sphere>
-
-        <!-- camera and cursor grouped as an entity -->
-        <a-entity id="camera-grp" position="0 1.6 0">
-            <a-camera position="0 0 0" wasd-controls-enabled="false">
-                <a-cursor fuse="true" fuse-timeout="500"></a-cursor>
-            </a-camera>
-        </a-entity>
-    </a-scene>
-
-    
-
-          
-          <script src="script.js"></script>
-          
-        </body>
-      </html>
-    
+		<script type="text/javascript" src="script.js"></script>
+	</body>
+</html>
